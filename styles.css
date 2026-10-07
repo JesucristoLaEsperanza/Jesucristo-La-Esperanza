@@ -151,6 +151,8 @@ h1 span, h2 span { color: var(--burgundy); font-style: italic; }
 .scripture { display: block; margin-top: 17px; color: var(--burgundy); font-size: .8rem; font-weight: 750; }
 
 .events-section { background: #f5ecdf; }
+.event-card[hidden], .announcement-card[hidden], .event-announcements[hidden], .camp-highlight[hidden], .events-empty-state[hidden] { display: none !important; }
+.events-empty-state { max-width: 700px; margin: 54px auto 0; padding: 28px; border: 1px solid var(--line); border-radius: 18px; color: var(--muted); text-align: center; }
 .events-heading { display: flex; align-items: end; justify-content: space-between; gap: 40px; }
 .events-heading h2 { margin-bottom: 0; }
 .events-heading .section-lead { max-width: 440px; padding-bottom: 7px; }
