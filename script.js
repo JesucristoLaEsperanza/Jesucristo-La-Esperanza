@@ -147,6 +147,32 @@
 
   loadDailyVerse();
 
+  const datedEvents = [...document.querySelectorAll('[data-event-expires]')];
+  const announcementsSection = document.querySelector('.event-announcements');
+  const emptyEventsMessage = document.querySelector('#events-empty-state');
+  const argentinaCalendarDate = () => {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date()).filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]));
+    return `${parts.year}-${parts.month}-${parts.day}`;
+  };
+  const removeExpiredAnnouncements = () => {
+    const today = argentinaCalendarDate();
+    datedEvents.forEach((event) => {
+      event.hidden = today > event.dataset.eventExpires;
+    });
+    if (announcementsSection) {
+      const hasUpcomingAnnouncement = [...announcementsSection.querySelectorAll('[data-event-expires]')]
+        .some((event) => !event.hidden);
+      announcementsSection.hidden = !hasUpcomingAnnouncement;
+    }
+    if (emptyEventsMessage) {
+      emptyEventsMessage.hidden = datedEvents.some((event) => !event.hidden);
+    }
+  };
+  removeExpiredAnnouncements();
+  window.setInterval(removeExpiredAnnouncements, 60 * 60 * 1000);
+  
   const eventDate = document.querySelector('#event-date');
   const eventCountdown = document.querySelector('#event-countdown');
   const eventStatus = document.querySelector('#event-status');
