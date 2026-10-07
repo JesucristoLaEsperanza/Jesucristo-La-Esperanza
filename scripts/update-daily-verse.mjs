@@ -40,9 +40,8 @@ async function getYouVersionJson(path, label) {
 
 const verseOfDay = await getYouVersionJson(`verse-of-the-days/${dayOfYear}`, 'Versículo diario');
 const passageId = String(verseOfDay?.passage_id || '');
-if (!passageId) throw new Error('YouVersion no devolvió la referencia del día.'){
-  console.log(`Pasaje diario recibido: ${passageId}`);
-};
+if (!passageId) throw new Error('YouVersion no devolvió la referencia del día.');
+console.log(`Pasaje diario recibido: ${passageId}`);
 
 
 const passage = await getYouVersionJson(
