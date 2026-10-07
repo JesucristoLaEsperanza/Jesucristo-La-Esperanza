@@ -44,10 +44,14 @@ if (!passageId) throw new Error('YouVersion no devolvió la referencia del día.
 console.log(`Pasaje diario recibido: ${passageId}`);
 
 
-const passage = await getYouVersionJson(
-  `bibles/149/passages/${encodeURIComponent(passageId)}?format=text`,
-  'Texto Reina-Valera 1960',
-);
+const bibleId = 128;
+const [bible, passage] = await Promise.all([
+  getYouVersionJson(`bibles/${bibleId}`, 'Datos de NVI 2025'),
+  getYouVersionJson(
+    `bibles/${bibleId}/passages/${encodeURIComponent(passageId)}?format=text`,
+    'Texto NVI 2025',
+  ),
+]);
 const content = String(passage?.content || '').replace(/\s+/g, ' ').trim();
 if (!content) throw new Error(`YouVersion no devolvió el texto de ${passageId}.`);
 
@@ -56,7 +60,10 @@ const dailyVerse = {
   passageId,
   reference: passage.reference || '',
   content,
-  translation: 'Reina-Valera 1960',
+   bibleId,
+  version: bible.abbreviation || 'NVI-S',
+  translation: 'Nueva Versión Internacional 2025',
+  copyright: String(bible.copyright || bible.promotional_content || '').trim(),
 };
 
 await writeFile(new URL('../daily-verse.json', import.meta.url), `${JSON.stringify(dailyVerse, null, 2)}\n`, 'utf8');
