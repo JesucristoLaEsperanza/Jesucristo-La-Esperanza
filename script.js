@@ -81,7 +81,9 @@
   const dailyVerseCard = document.querySelector('.daily-verse-card');
   const dailyVerseText = document.querySelector('#daily-verse-text');
   const dailyVerseReference = document.querySelector('#daily-verse-reference');
+  const dailyVerseTranslation = document.querySelector('#daily-verse-translation');
   const dailyVerseLink = document.querySelector('#daily-verse-link');
+  const dailyVerseCopyright = document.querySelector('#daily-verse-copyright');
   const dailyVerseStatus = document.querySelector('#daily-verse-status');
 
   const loadDailyVerse = async () => {
@@ -105,14 +107,21 @@
     };
     const formatReference = (passageId, fallback) => {
       const match = /^([1-3]?[A-Z]{2,3})\.(\d+)\.(.+)$/.exec(passageId || '');
-      return match ? `${bookNames[match[1]] || match[1]} ${match[2]}:${match[3]}` : (fallback || 'Reina-Valera 1960');
+      return match ? `${bookNames[match[1]] || match[1]} ${match[2]}:${match[3]}` : (fallback || '');
     };
-    const renderPassage = (passage, passageId) => {
+    const renderPassage = (passage, passageId, metadata = {}) => {
       const content = String(passage?.content || '').replace(/\s+/g, ' ').trim();
       if (!content) throw new Error('La API no devolvió el texto del pasaje.');
       dailyVerseText.textContent = `“${content}”`;
       dailyVerseReference.textContent = formatReference(passageId, passage?.reference);
-      dailyVerseLink.href = `https://www.bible.com/es/bible/149/${encodeURIComponent(passageId)}.RVR1960`;
+      if (dailyVerseTranslation) dailyVerseTranslation.textContent = metadata.translation || 'Reina-Valera 1960';
+      const bibleId = Number(metadata.bibleId) || 149;
+      const version = metadata.version || (bibleId === 128 ? 'NVI-S' : 'RVR1960');
+      dailyVerseLink.href = `https://www.bible.com/es/bible/${bibleId}/${encodeURIComponent(passageId)}.${encodeURIComponent(version)}`;
+      if (dailyVerseCopyright) {
+        dailyVerseCopyright.textContent = metadata.copyright || '';
+        dailyVerseCopyright.hidden = !metadata.copyright;
+      }
       dailyVerseCard.setAttribute('aria-busy', 'false');
     };
 
@@ -126,7 +135,7 @@
       const content = String(dailyVerse?.content || '').trim();
       if (!dailyVerse?.date || !passageId || !content) throw new Error('El archivo diario no contiene una cita completa.');
 
-      renderPassage({ content }, passageId);
+       renderPassage({ content, reference: dailyVerse.reference }, passageId, dailyVerse);
       if (dailyVerse.date !== date && dailyVerseStatus) {
         dailyVerseStatus.textContent = 'Mostramos la última cita disponible. El versículo se actualizará al ejecutarse la tarea diaria.';
         dailyVerseStatus.hidden = false;
