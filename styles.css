@@ -357,6 +357,7 @@ h1 span, h2 span { color: var(--burgundy); font-style: italic; }
 .verse-label { margin-bottom: 17px; }
 .verse-card-footer cite { display: grid; gap: 4px; }
 .verse-card-footer cite small { color: var(--muted); font-size: .77rem; font-weight: 500; }
+.verse-card-copyright { margin: 10px 0 0; color: var(--muted); font-size: .68rem; line-height: 1.45; }
 .verse-card-status { margin: 12px 0 0; color: var(--muted); font-size: .78rem; }
 
 .pastors-section { background: var(--cream-strong); }
