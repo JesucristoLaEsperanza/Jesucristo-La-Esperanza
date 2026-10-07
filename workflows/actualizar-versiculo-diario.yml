@@ -1,0 +1,55 @@
+name: Actualizar versículo diario
+
+on:
+  schedule:
+    - cron: '15 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update-daily-verse:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Descargar el sitio
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Consultar YouVersion y guardar el versículo
+        run: node scripts/update-daily-verse.mjs
+        env:
+          YOUVERSION_APP_KEY: ${{ secrets.YOUVERSION_APP_KEY }}
+
+      - name: Publicar el archivo actualizado
+        run: |
+          if git diff --quiet -- daily-verse.json; then
+            echo "El versículo diario ya está actualizado."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add daily-verse.json
+          git commit -m "Actualizar versículo diario"
+          git push
+
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Cargar sitio actualizado
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: '.'
+
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
