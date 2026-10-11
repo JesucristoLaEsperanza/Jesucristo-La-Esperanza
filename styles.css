@@ -364,9 +364,9 @@ h1 span, h2 span { color: var(--burgundy); font-style: italic; }
 
 .pastors-section { background: var(--cream-strong); }
 .pastors-layout { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: clamp(32px, 6vw, 72px); justify-content: center; align-items: stretch; max-width: 1120px; }
-.pastors-photo { position: relative; width: 100%; max-width: 430px; height: 100%; margin: 0; justify-self: center; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: var(--cream-deep); box-shadow: var(--shadow); }
+.pastors-photo { position: relative; width: 100%; max-width: 430px; height: auto; aspect-ratio: 3 / 4; margin: 0; justify-self: center; align-self: center; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: var(--cream-deep); box-shadow: var(--shadow); }
 .pastors-photo figcaption { position: absolute; z-index: 1; right: 0; bottom: 0; left: 0; margin: 0; padding: 44px 20px 20px; background: linear-gradient(180deg, rgba(78, 28, 48, 0), rgba(78, 28, 48, .9)); color: var(--on-panel); font-family: Georgia, serif; font-size: clamp(1.25rem, 2vw, 1.55rem); font-weight: 700; line-height: 1.25; text-align: center; text-shadow: 0 1px 3px rgba(0, 0, 0, .24); }
-.pastors-photo img { display: block; width: 100%; height: 100%; background: var(--cream-deep); object-fit: contain; object-position: center center; }
+.pastors-photo img { display: block; width: 100%; height: 100%; background: var(--cream-deep); object-fit: cover; object-position: center center; }
 .pastors-copy { max-width: 570px; }
 .pastors-content { display: flex; min-width: 0; flex-direction: column; justify-content: center; }
 .pastors-copy { margin-bottom: 18px; }
